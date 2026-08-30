@@ -10,8 +10,12 @@ public class Main {
 		
 		int userChoice = 1;
 		
+		
 		ResultManager result = new ResultManager();
-
+		
+		FileHandling file = new FileHandling();
+		file.loadFromFile(result);
+		
 		while(userChoice != 6) {
 			System.out.println("1.Add student \n2.Search student \n3.Remove student \n4.Rank students \n5.Display students \n6.Exit");
 			System.out.println("Enter your choice: ");
@@ -67,12 +71,18 @@ public class Main {
 					System.out.println("Student details: ");
 					result.displayAll();
 					break;
+			
+			case 6:
+					System.out.println("Exiting and saving data...");
+					break;
 					
 			default: 
 					System.out.println("Invalid choice");
 	
 			}
 		}
+		
+		file.saveToFile(result);
 	}
 }
 

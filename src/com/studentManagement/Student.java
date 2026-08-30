@@ -3,7 +3,7 @@ package com.studentManagement;
 import java.util.Arrays;
 
 public class Student extends Person implements Comparable<Student>{
-	private int[] marks;
+	protected int[] marks;
 	
 	
 	//constructor

@@ -3,7 +3,7 @@ package com.studentManagement;
 import java.util.Arrays;
 
 public class ResultManager {
-	Student[] students = new Student[10];
+	protected Student[] students = new Student[10];
 	int top = -1;
 	
 	public void addStudent(Student student) {
@@ -12,7 +12,7 @@ public class ResultManager {
 			return;
 		}
 		students[++top] = student;
-		System.out.println(student.getName() + " is added to the list");
+		//System.out.println(student.getName() + " is added to the list");
 	}
 	
 	public void removeStudent(String targetName) {
@@ -85,4 +85,6 @@ public class ResultManager {
 		}
 		System.out.println("----------------------------------");
 	}
+	
+	
 }
