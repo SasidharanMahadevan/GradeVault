@@ -3,11 +3,11 @@ package com.studentManagement;
 import java.util.Arrays;
 
 public class Student extends Person implements Comparable<Student>{
-	protected int[] marks;
+	private Integer[] marks;
 	
 	
 	//constructor
-	Student(int id, String name, int[] marks){
+	Student(Integer id, String name, Integer[] marks){
 		super(id, name);
 		this.marks = marks;
 	}
@@ -17,19 +17,19 @@ public class Student extends Person implements Comparable<Student>{
 		return "Student";
 	}
 	
-	public int[] getMarks() {
+	public Integer[] getMarks() {
 		return marks;
 	}
 	
 	//setters
-	public void setMarks(int[] marks) {
+	public void setMarks(Integer[] marks) {
 		this.marks = marks;
 	}
 	
 	//find the average of marks
 	public double computeAverage() {
 		double avg = 0;
-		for(int num : marks)
+		for(Integer num : marks)
 			avg += num;
 		return avg/marks.length;
 	}
@@ -42,7 +42,7 @@ public class Student extends Person implements Comparable<Student>{
 	//overriding default toString method
 	@Override
 	public String toString() {
-		return "Id: " + this.id + " Name: " + this.name + " Marks: " + Arrays.toString(marks);
+		return "Id: " + this.getId() + " Name: " + this.getName() + " Marks: " + Arrays.toString(marks);
 	}
 
 	@Override
