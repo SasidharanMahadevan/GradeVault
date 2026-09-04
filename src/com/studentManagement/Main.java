@@ -80,11 +80,18 @@ public class Main {
 							name = sc.nextLine();
 							System.out.println(result.searchStudent(name));
 						}
-						else {
+						else if(choice == 2){
 							System.out.println("Enter the student Id to be searched: ");
 							
 							id = sc.nextInt();
+							//sc.nextInt() returns primitive int
+							//if id is declared as int
+							//autoboxing will happen here
+							//primitive int -> Integer object
 							System.out.println(result.searchStudent(id));
+						}
+						else {
+							System.out.println("Invalid choice");
 						}
 					}catch(InputMismatchException e) {
 						System.out.println("Data type is not valid. Provide correct data");
@@ -107,11 +114,15 @@ public class Main {
 							name = sc.nextLine();
 							result.removeStudent(name);
 						}
-						else {
+						else if(choice == 2){
 							System.out.println("Enter the student Id: ");
 							
 							id = sc.nextInt();
+							//same as case 2 concept
 							result.removeStudent(id);
+						}
+						else {
+							System.out.println("Invalid choice");
 						}
 					}catch(InputMismatchException e) {
 						System.out.println("Data type is not valid. Provide correct data");
@@ -140,10 +151,13 @@ public class Main {
 							name = sc.nextLine();
 							result.updateStudent(name, updateMarks);
 						}
-						else {
+						else if(choice == 2){
 							System.out.println("Enter id of the student: ");
 							id = sc.nextInt();
 							result.updateStudent(id, updateMarks);
+						}
+						else {
+							System.out.println("Invalid choice");
 						}
 					}
 					catch(InputMismatchException e) {

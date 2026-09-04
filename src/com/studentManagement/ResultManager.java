@@ -1,16 +1,14 @@
 package com.studentManagement;
 
-import java.util.Arrays;
+
+import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResultManager {
-	private Student[] students = new Student[10];
-	private int top = -1;
+	private List<Student> students = new ArrayList<Student>();
 	
 	public void addStudent(Student student) {
-		if(top == students.length - 1) {
-			System.out.println("List is full");
-			return;
-		}
 		//check if the id is already present
 		boolean exists = false;
 		if(findIndex(student.getId()) != -1)
@@ -28,14 +26,14 @@ public class ResultManager {
 		}
 		
 		//add new student
-		students[++top] = student;
+		students.add(student);
 		//System.out.println(student.getName() + " is added to the list");
 	}
 	
 	//generic method
 	public <T> void removeStudent(T target) {
 		//empty array
-		if(top == -1) {
+		if(students.isEmpty()) {
 			System.out.println("There are no students");
 			return;
 		}
@@ -49,15 +47,8 @@ public class ResultManager {
 			return;
 		}
 		
-		//move the elements after target to its previous position
-		for(int i = targetIndex; i < top; i++) {
-			students[i] = students[i + 1];
-		}
-		
-		//remove last student
-		students[top] = null;
-		//reduce the top as we removed an element
-		top--;
+		//remove the target
+		students.remove(targetIndex);
 	}
 	
 	//generic method
@@ -71,9 +62,10 @@ public class ResultManager {
 		}
 		
 		//target found
-		return students[targetIndex];
+		return students.get(targetIndex);
 		
 	}
+	
 	
 	public <T> void updateStudent(T target, Integer[] marks) {
 		int targetIndex = resolveIndex(target);
@@ -90,9 +82,11 @@ public class ResultManager {
 			return;
 		}
 			
-		students[targetIndex].setMarks(marks);
+		Student s = students.get(targetIndex);
+		s.setMarks(marks);
 		System.out.println("Updated student marks");
 	}
+	
 	
 	private <T> int resolveIndex(T  target) {
 		int targetIndex = -1;
@@ -103,10 +97,11 @@ public class ResultManager {
 		return targetIndex;
 	}
 	
-	public int findIndex(String targetName) {
+	
+	private int findIndex(String targetName) {
 		//find the index of student
-		for(int i = 0; i <= top; i++) {
-			String name = students[i].getName();
+		for(int i = 0; i < students.size(); i++) {
+			String name = students.get(i).getName();
 			//found
 			if(name.equals(targetName)) {
 				return i;
@@ -117,13 +112,15 @@ public class ResultManager {
 		return -1;
 	}
 	
+	
 	//overloaded method for finding index
-	public int findIndex(Integer id) {
+	private int findIndex(Integer id) {
+
 		//find the index of student
-		for(int i = 0; i <= top; i++) {
+		for(int i = 0; i < students.size(); i++) {
 			//found
 			// == will compare the obects, not the values when used with Integer object
-			if(id.equals(students[i].getId()))
+			if(id.equals(students.get(i).getId()))
 				return i;
 		}
 		
@@ -131,7 +128,8 @@ public class ResultManager {
 		return -1;
 	}
 	
-	public boolean withinRange(Integer[] marks) {
+	
+	private boolean withinRange(Integer[] marks) {
 		for(Integer mark : marks) {
 			//out of range
 			if(mark < 0 || mark > 100) 
@@ -142,27 +140,30 @@ public class ResultManager {
 		return true;
 	}
 
+	
 	public void rankStudents() {
 		//sort students based on rank
-		Student[] ranked = sortStudents();
+		List<Student> ranked = sortStudents();
 		
-		for(int i = 0; i <= top; i++)
-			System.out.println(ranked[i].displayDetails());
+		for(int i = 0; i < students.size(); i++)
+			System.out.println(ranked.get(i).displayDetails());
 	}
 	
-	public Student[] sortStudents() {
-		Student[] ranked = Arrays.copyOf(students, top + 1);
-		Arrays.sort(ranked);
+	
+	public List<Student> sortStudents() {
+		List<Student> ranked = new ArrayList<>(students);
+		Collections.sort(ranked);
 		return ranked;
 	}
 	
-	public Student[] getStudents() {
-		return Arrays.copyOf(students, top + 1);
+	
+	public List<Student> getStudents() {
+		return new ArrayList<>(students);
 	}
 	
 	public void displayAll() {
-		for(int i = 0; i <= top; i++) {
-			System.out.println(students[i]);
+		for(int i = 0; i < students.size(); i++) {
+			System.out.println(students.get(i));
 		}
 		System.out.println("----------------------------------");
 	}

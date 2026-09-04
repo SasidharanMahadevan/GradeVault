@@ -5,6 +5,9 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import java.util.List;
+//import java.util.ArrayList;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
@@ -45,15 +48,15 @@ public class FileHandling{
 		}
 	}
 	
-	public void exportStudents(Student[] student) {
+	public void exportStudents(List<Student> student) {
 		saveToFile(studentFile, student);
 	}
 	
-	public void exportRankings(Student[] student) {
+	public void exportRankings(List<Student> student) {
 		saveToFile(rankedFile, student);
 	}
 	
-	public void saveToFile(File file, Student[] student) {
+	private void saveToFile(File file, List<Student> student) {
 		//FileWriter uses \n separately to insert new line
 		//try(FileWriter writer = new FileWriter(file);)
 		
