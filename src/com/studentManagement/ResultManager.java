@@ -1,20 +1,19 @@
 package com.studentManagement;
 
-
+import java.sql.SQLException;
 import java.util.Collections;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ResultManager {
-	private List<Student> students = new ArrayList<Student>();
-	
-	public void addStudent(Student student) {
-		//check if the id is already present
-		boolean exists = false;
-		if(findIndex(student.getId()) != -1)
-			exists = true;
+	private DBHandling db;
 		
-		if(exists) {
+	ResultManager(DBHandling db){
+		this.db = db;
+	}
+	
+	public void addStudent(Student student) throws SQLException {
+		//check if the id is already present
+		if(db.searchStudent(student.getId()) != null) {
 			System.out.println("Id already exists. Try using other Id's");
 			return;
 		}
@@ -26,108 +25,46 @@ public class ResultManager {
 		}
 		
 		//add new student
-		students.add(student);
+		db.insertStudent(student);
 		//System.out.println(student.getName() + " is added to the list");
 	}
 	
-	//generic method
-	public <T> void removeStudent(T target) {
-		//empty array
-		if(students.isEmpty()) {
-			System.out.println("There are no students");
-			return;
-		}
-		
-		//find the index of student to be removed
-		int targetIndex = resolveIndex(target);
-		
-		//target not found
-		if(targetIndex == -1) {
-			System.out.println("Student not found");
-			return;
-		}
-		
+	public void removeStudent(Integer id) throws SQLException {
 		//remove the target
-		students.remove(targetIndex);
+		int rows = db.deleteStudent(id);
+		if(rows == 0)
+			System.out.println("Student not found");
+		
+		System.out.println("No of rows affected: "+ rows);
 	}
 	
-	//generic method
-	public <T> Student searchStudent(T target) {
-		int targetIndex = resolveIndex(target);
-		
-		//target not found
-		if(targetIndex == -1) {
-			System.out.println("Student not found");
-			return null;
-		}
-		
-		//target found
-		return students.get(targetIndex);
-		
-	}
-	
-	
-	public <T> void updateStudent(T target, Integer[] marks) {
-		int targetIndex = resolveIndex(target);
-		
-		//target not found
-		if(targetIndex == -1) {
-			System.out.println("Student not found");
-			return;
-		}
-		
-		//updating
+	public void updateStudent(Integer id, Integer[] marks) throws SQLException {
+		//Range check for marks
 		if(!withinRange(marks)) {
 			System.out.println("Marks should be in range(0,100).");
 			return;
 		}
 			
-		Student s = students.get(targetIndex);
-		s.setMarks(marks);
-		System.out.println("Updated student marks");
-	}
-	
-	
-	private <T> int resolveIndex(T  target) {
-		int targetIndex = -1;
-		if(target instanceof String)
-			targetIndex = findIndex((String)target);
-		else if(target instanceof Integer)
-			targetIndex = findIndex((Integer)target);	
-		return targetIndex;
-	}
-	
-	
-	private int findIndex(String targetName) {
-		//find the index of student
-		for(int i = 0; i < students.size(); i++) {
-			String name = students.get(i).getName();
-			//found
-			if(name.equals(targetName)) {
-				return i;
-			}
-		}
+		//updating
+		int rows = db.updateStudent(id, marks);
+		if(rows == 0)
+			System.out.println("Student not found");
 		
-		//not found
-		return -1;
+		System.out.println("No of rows affected: "+ rows);
 	}
 	
-	
-	//overloaded method for finding index
-	private int findIndex(Integer id) {
-
-		//find the index of student
-		for(int i = 0; i < students.size(); i++) {
-			//found
-			// == will compare the obects, not the values when used with Integer object
-			if(id.equals(students.get(i).getId()))
-				return i;
-		}
+	public Student searchStudent(Integer id) throws SQLException {
+		Student s = db.searchStudent(id);
 		
-		//not found
-		return -1;
+		//target not found
+		if(s == null) 
+			System.out.println("Student not found");
+		
+		//Not found -> return null
+		//Found	-> return student
+		return s;
+		
 	}
-	
 	
 	private boolean withinRange(Integer[] marks) {
 		for(Integer mark : marks) {
@@ -140,31 +77,22 @@ public class ResultManager {
 		return true;
 	}
 
-	
-	public void rankStudents() {
+	public void rankStudents() throws SQLException {
 		//sort students based on rank
-		List<Student> ranked = sortStudents();
+		List<Student> students = db.getAllStudents();
+		Collections.sort(students); 
 		
-		for(int i = 0; i < students.size(); i++)
-			System.out.println(ranked.get(i).displayDetails());
+		for(Student s : students)
+			System.out.println(s.displayDetails());
 	}
 	
-	
-	public List<Student> sortStudents() {
-		List<Student> ranked = new ArrayList<>(students);
-		Collections.sort(ranked);
-		return ranked;
-	}
-	
-	
-	public List<Student> getStudents() {
-		return new ArrayList<>(students);
-	}
-	
-	public void displayAll() {
+	public void displayAll() throws SQLException {
+		List<Student> students = db.getAllStudents();
+		
 		for(int i = 0; i < students.size(); i++) {
 			System.out.println(students.get(i));
 		}
+		
 		System.out.println("----------------------------------");
 	}
 	
